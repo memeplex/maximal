@@ -29,15 +29,15 @@ def match(win):
 
 def hide(win):
     hide = win.get_full_property(hide_atom, X.AnyPropertyType)
+    handled[win.id] = hide and hide.value
     win.change_property(hide_atom, Xatom.CARDINAL, 32, [1])
-    return hide and hide.value
 
 
 def unhide(win_id, prev_value):
     win = dpy.create_resource_object('window', win_id)
     if prev_value is None:
         win.delete_property(hide_atom)
-    else:
+    elif prev_value is not True:
         win.change_property(hide_atom, Xatom.CARDINAL, 32, prev_value)
 
 
@@ -45,10 +45,11 @@ def handle(event):
     win = event.window
     if event.type == X.CreateNotify and match(win):
         win.change_attributes(event_mask=X.StructureNotifyMask)
+        handled[win.id] = True
+    elif event.type == X.MapNotify and handled.get(win.id) is True:
+        hide(win)
     elif event.type == X.DestroyNotify and win.id in handled:
         del handled[win.id]
-    elif event.type == X.MapNotify and win.id not in handled:
-        handled[win.id] = hide(win)
 
 
 def rlist(parent=None):
