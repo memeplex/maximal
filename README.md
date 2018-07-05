@@ -16,7 +16,7 @@ This is my take on a pretty much demanded feature. It was born out of disconform
 
 What `maximal` does is indeed quite minimal: it listens for normal window creation events and sets the `_GTK_HIDE_TITLEBAR_WHEN_MAXIMIZED` property.
 
-To disable it just send a `TERM` signal to the process; this restores the previous state of `_GTK_HIDE_TITLEBAR_WHEN_MAXIMIZED` for each managed window. When you run `maximal` again it will detect every open normal window and make its title hideable on maximize, then enter the main event handling loop as usual. This all means that you can add a shortcut like `bash -c 'killall maximal || maximal'` to your WM in order to toggle `maximal` on and off.
+To disable it just send a `TERM` signal to the process; this restores the previous state of `_GTK_HIDE_TITLEBAR_WHEN_MAXIMIZED` for each managed window. When you run `maximal` again it will detect every open normal window and make its title hideable on maximize, then enter the main event handling loop as usual.
 
 You can set a whitelist and/or a blacklist of patterns by exporting the environment variables `MAXIMAL_WHITELIST` and `MINIMAL_WHITELIST`. These variables must contain a comma separated list of regular expressions (as defined [here](https://docs.python.org/3/library/re.html)). Whitespace before and after the commas is ignored. The patterns are matched against a target with format `<wm_class[0]>::<wm_class[1]>::<wm_name>`; for instance, the target for my current firefox window (showing this page) is `Navigator::Firefox::memeplex/maximal: Maximal, a minimal utility that hides the titlebar when a window is maximized in Gnome (also in Cinnamon -master branch-) - Mozilla Firefox`. If no whitelist and no blacklist are given, every client is matched. If there is a whitelist but no blacklist, only whitelisted clients are matched. In there is a blacklist but no whitelist, only clients not blacklisted are matched. If both a whitelist and a blacklist are set, only clients whitelisted but not blacklisted are matched. For convenience, a `.*` prefix and a `.*` suffix are automatically appended to the pattern.
 
@@ -39,8 +39,6 @@ export MAXIMAL_WHITELIST=...
 export MAXIMAL_BLACKLIST=...
 maximal &
 ```
-
-Additionally you can add a shortcut like `bash -c 'killall maximal || maximal'` to your WM in order to toggle `maximal` on and off.
 
 ## TODO
 
