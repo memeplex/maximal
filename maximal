@@ -41,8 +41,21 @@ def unhide(win_id, prev_value):
         win.change_property(hide_atom, Xatom.CARDINAL, 32, prev_value)
 
 
+def rlist(parent=None):
+    try:
+        children = (parent or root).query_tree().children
+    except Exception:
+        return
+    for win in children:
+        yield win
+        yield from rlist(win)
+
+
 def handle(event):
-    win = event.window
+    try:
+        win = event.window
+    except Exception:
+        return
     if event.type == X.CreateNotify and match(win):
         win.change_attributes(event_mask=X.StructureNotifyMask)
         handled[win.id] = True
@@ -50,15 +63,6 @@ def handle(event):
         hide(win)
     elif event.type == X.DestroyNotify and win.id in handled:
         del handled[win.id]
-
-
-def rlist(parent=None):
-    try:
-        for win in (parent or root).query_tree().children:
-            yield win
-            yield from rlist(win)
-    except Exception:
-        pass
 
 
 def exit(*args):
