@@ -28,9 +28,10 @@ def match(win):
 
 
 def hide(win):
-    hide = win.get_full_property(hide_atom, X.AnyPropertyType)
-    handled[win.id] = hide and hide.value
-    win.change_property(hide_atom, Xatom.CARDINAL, 32, [1])
+    if win.id not in handled and match(win):
+        hide = win.get_full_property(hide_atom, X.AnyPropertyType)
+        handled[win.id] = hide and hide.value
+        win.change_property(hide_atom, Xatom.CARDINAL, 32, [1])
 
 
 def unhide(win_id, prev_value):
@@ -39,6 +40,15 @@ def unhide(win_id, prev_value):
         win.delete_property(hide_atom)
     elif prev_value is not True:
         win.change_property(hide_atom, Xatom.CARDINAL, 32, prev_value)
+
+
+def handle(event):
+    if event.type == X.CreateNotify:
+        event.window.change_attributes(event_mask=X.StructureNotifyMask)
+    elif event.type == X.MapNotify:
+        hide(event.window)
+    elif event.type == X.DestroyNotify:
+        handled.pop(event.window.id, None)
 
 
 def rlist(parent=None):
@@ -51,18 +61,12 @@ def rlist(parent=None):
         yield from rlist(win)
 
 
-def handle(event):
-    try:
-        win = event.window
-    except Exception:
-        return
-    if event.type == X.CreateNotify and match(win):
-        win.change_attributes(event_mask=X.StructureNotifyMask)
-        handled[win.id] = True
-    elif event.type == X.MapNotify and handled.get(win.id) is True:
+def loop():
+    for win in rlist():
         hide(win)
-    elif event.type == X.DestroyNotify and win.id in handled:
-        del handled[win.id]
+    root.change_attributes(event_mask=X.SubstructureNotifyMask)
+    while True:
+        handle(dpy.next_event())
 
 
 def exit(*args):
@@ -70,15 +74,6 @@ def exit(*args):
         unhide(win_id, value)
     dpy.flush()
     sys.exit()
-
-
-def loop():
-    for win in rlist():
-        if match(win):
-            hide(win)
-    root.change_attributes(event_mask=X.SubstructureNotifyMask)
-    while True:
-        handle(dpy.next_event())
 
 
 handled = {}
