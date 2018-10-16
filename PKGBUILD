@@ -5,9 +5,9 @@ pkgver=20180705
 pkgrel=1
 pkgdesc='Hides the titlebar when a window is maximized in Gnome/Cinnamon'
 arch=('any')
+url='https://github.com/memeplex/maximal'
 depends=('python-xlib')
 makedepends=('git')
-url='https://github.com/memeplex/maximal'
 source=("maximal-git::git+$url.git")
 md5sums=('SKIP')
 
