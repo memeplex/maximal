@@ -2,7 +2,7 @@
 
 pkgname=maximal
 pkgver=20180705
-pkgrel=1
+pkgrel=2
 pkgdesc='Hides the titlebar when a window is maximized in Gnome/Cinnamon'
 arch=('any')
 url='https://github.com/memeplex/maximal'
