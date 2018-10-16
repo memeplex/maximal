@@ -22,23 +22,50 @@ You can set a whitelist and/or a blacklist of patterns by exporting the environm
 
 ## Installation
 
-If you're on Arch or an Arch-based distro (like Manjaro) you can install `maximal` from the AUR:
+### Install with `pip`
 
-`yaourt -S maximal`
+For system-level installation:
 
-Otherwise use `pip`:
+    pip install git+https://github.com/memeplex/maximal.git
 
-* For system-level installation run `pip install git+https://github.com/memeplex/maximal.git`
+For user-level installation:
 
-* For user-level installation run `pip install --user git+https://github.com/memeplex/maximal.git`
+    pip install --user git+https://github.com/memeplex/maximal.git
 
-Then add something like the following to your `~/.xprofile` and start a new session:
+### Install from AUR (Archlinux & Arch-based distros)
+
+    yaourt -S maximal
+
+### Autostart using xprofile
+
+Add something like the following to your `~/.xprofile` and start a new session:
 
 ```
 export MAXIMAL_WHITELIST=...
 export MAXIMAL_BLACKLIST=...
 maximal &
 ```
+
+### Autostart using systemd
+
+Create a file `~/.local/share/systemd/user/maximal.service` with the following content:
+
+    [Unit]
+    Description=Removes title bar from maximized windows
+
+    [Service]
+    Type=simple
+    ExecStart=maximal
+    TimeoutStartSec=0
+    Restart=on-success
+
+    [Install]
+    WantedBy=default.target
+
+Then enable and start the service with
+
+    systemctl --user enable maximal.service
+    systemctl --user start maximal.service
 
 ## TODO
 
