@@ -1,11 +1,13 @@
 pkgbase = maximal
 	pkgdesc = Hides the titlebar when a window is maximized in Gnome/Cinnamon
 	pkgver = 20180705
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/memeplex/maximal
 	arch = any
+	makedepends = git
 	depends = python-xlib
-	source = git+https://github.com/memeplex/${pkgname}.git
+	source = maximal-git::git+https://github.com/memeplex/maximal.git
+	md5sums = SKIP
 
 pkgname = maximal
 
