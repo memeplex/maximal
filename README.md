@@ -1,3 +1,5 @@
+**IMPORTANT: this is not mantained anymore but there is an active fork at https://github.com/crazygolem/maximal**
+
 # maximal
 
 A minimal utility that hides the titlebar when a window is maximized in Gnome (and soon also in Cinnamon due to https://github.com/linuxmint/Cinnamon/issues/7681).
